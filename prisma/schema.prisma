@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  BUYER
+  SUPPLIER
+  ADMIN
+}
+
+enum KycStatus {
+  NOT_STARTED
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum BusinessType {
+  BAR
+  RESTAURANT
+  HOTEL
+  CAFE
+  SHOP
+  PRIVATE_ORDER
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  role         Role     @default(BUYER)
+  createdAt    DateTime @default(now())
+
+  kyc Kyc?
+}
+
+model Kyc {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  businessType BusinessType
+  businessName String
+  city         String
+  address      String
+  phone        String
+  email        String
+  contactName  String
+  position     String
+
+  status          KycStatus @default(NOT_STARTED)
+  rejectionReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
