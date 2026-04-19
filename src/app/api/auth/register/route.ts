@@ -42,7 +42,12 @@ export async function POST(req: NextRequest) {
     });
     setSessionCookie(res, token);
     return res;
-  } catch {
+  } catch (error) {
+    console.error("REGISTER_ROUTE_ERROR", error);
+    if (error instanceof Error) {
+      console.error("REGISTER_ROUTE_MESSAGE", error.message);
+      console.error("REGISTER_ROUTE_STACK", error.stack);
+    }
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }
