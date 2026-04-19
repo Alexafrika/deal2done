@@ -3,7 +3,9 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { signToken, setSessionCookie } from "@/lib/session";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
+  console.log("REGISTER_START");
+
   try {
     const body = await req.json();
     const { email, password, full_name, role } = body;
@@ -44,10 +46,12 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("REGISTER_ROUTE_ERROR", error);
+
     if (error instanceof Error) {
       console.error("REGISTER_ROUTE_MESSAGE", error.message);
       console.error("REGISTER_ROUTE_STACK", error.stack);
     }
-    return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
+
+    return new Response("Internal Server Error", { status: 500 });
   }
 }
