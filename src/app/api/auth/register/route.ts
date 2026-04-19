@@ -52,6 +52,9 @@ export async function POST(req: Request) {
       console.error("REGISTER_ROUTE_STACK", error.stack);
     }
 
-    return new Response("Internal Server Error", { status: 500 });
+    return Response.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
